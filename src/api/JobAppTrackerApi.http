@@ -1,6 +1,17 @@
-@JobAppTrackerApi_HostAddress = http://localhost:5208
+@host = http://localhost:5208
 
-GET {{JobAppTrackerApi_HostAddress}}/weatherforecast/
-Accept: application/json
+### Register
+POST {{host}}/api/auth/register
+Content-Type: application/json
 
-###
+{ "email": "test@example.com", "password": "Password123" }
+
+### Login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "email": "test@example.com", "password": "Password123" }
+
+### Test authorization for user (paste your token after Bearer)
+GET {{host}}/api/test
+Authorization: Bearer <paste-token-here>
