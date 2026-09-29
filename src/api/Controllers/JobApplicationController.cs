@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace JobAppTrackerApi.Controllers
 {
     [ApiController]
-    [Route("api/jobApplications")]
+    [Route("api/applications")]
     [Authorize]
     public class JobApplicationController(AppDbContext db) : ControllerBase
     {
@@ -37,14 +37,69 @@ namespace JobAppTrackerApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<JobAppResponse>>> Get()
+        public async Task<ActionResult<List<JobAppResponse>>> Get(
+                    [FromQuery] string? status,
+                    [FromQuery] string? company,
+                    [FromQuery] DateOnly? appliedAfter,
+                    [FromQuery] DateOnly? appliedBefore,
+                    [FromQuery] string? sortBy,
+                    [FromQuery] string? sortDir,
+                    [FromQuery] int page = 1,
+                    [FromQuery] int pageSize = 10
+            )
         {
-            var items = await db.JobApplications
-                                  .AsNoTracking()
-                                  .Where(app => app.UserId == _userId)
-                                  .ToListAsync();
+            var query = db.JobApplications
+                        .AsNoTracking()
+                        .Where(app => app.UserId == _userId);
 
-            return items.Select(ToResponse).ToList();
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (!Enum.TryParse<AppStatus>(status, true, out var parsedStatus) || !Enum.IsDefined(parsedStatus))
+                    return BadRequest(new { message = $"Invalid status: {status}" });
+                query = query.Where(app => app.Status == parsedStatus);
+            }
+
+            if (!string.IsNullOrEmpty(company))
+            {
+                query = query.Where(app => app.Company.Contains(company));
+            }
+
+            if (appliedAfter.HasValue)
+            {
+                query = query.Where(app => app.AppliedDate >= appliedAfter.Value);
+            }
+
+            if (appliedBefore.HasValue)
+            {
+                query = query.Where(app => app.AppliedDate <= appliedBefore.Value);
+            }
+
+            query = (sortBy?.ToLower(), sortDir?.ToLower()) switch
+            {
+                ("company", "asc") => query.OrderBy(app => app.Company),
+                ("company", _) => query.OrderByDescending(app => app.Company),
+                ("status", "asc") => query.OrderBy(app => app.Status),
+                ("status", _) => query.OrderByDescending(app => app.Status),
+                (_, "asc") => query.OrderBy(app => app.AppliedDate),
+                _ => query.OrderByDescending(app => app.AppliedDate),
+            };
+
+            pageSize = Math.Clamp(pageSize, 1, 100);
+            page = Math.Max(page, 1);
+
+            var appCount = await query.CountAsync();
+            var applications = await query
+                            .Skip((page - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
+
+            return Ok(new {
+                applications = applications.Select(ToResponse),
+                page,
+                pageSize,
+                appCount,
+                totalPages = (int)Math.Ceiling(appCount / (double)pageSize)
+            });
         }
 
         [HttpGet("{id}")]
@@ -144,14 +199,14 @@ namespace JobAppTrackerApi.Controllers
                 return NotFound();
             }
 
-            if (status is not null)
+            if (!string.IsNullOrEmpty(status))
             {
-                if (!Enum.TryParse<AppStatus>(status, ignoreCase: true, out var enumStatus) || !Enum.IsDefined(enumStatus))
+                if (!Enum.TryParse<AppStatus>(status, ignoreCase: true, out var parsedStatus) || !Enum.IsDefined(parsedStatus))
                 {
                     return BadRequest(new { message = $"Invalid status: {status}" });
                 }
 
-                jobApp.Status = enumStatus;
+                jobApp.Status = parsedStatus;
             }
             else
             {

@@ -22,7 +22,7 @@ GET {{host}}/api/test
 Authorization: Bearer {{token}}
 
 ### Create job application
-POST {{host}}/api/jobApplications/
+POST {{host}}/api/applications/
 Authorization: Bearer {{token}}
 Content-Type: application/json
 {
@@ -31,31 +31,31 @@ Content-Type: application/json
 }
 
 ### Get job application by Id
-Get {{host}}/api/jobApplications/1
+Get {{host}}/api/applications/1
 Authorization: Bearer {{token}}
 
 ### Get all job application 
-Get {{host}}/api/jobApplications
+Get {{host}}/api/applications?status=archived&pageSize=3
 Authorization: Bearer {{token}}
 
 ### Delete job application by Id
-Delete {{host}}/api/jobApplications/1
+Delete {{host}}/api/applications/1
 Authorization: Bearer {{token}}
 
 ### Delete all job application 
-Delete {{host}}/api/jobApplications
+Delete {{host}}/api/applications
 Authorization: Bearer {{token}}
  
 ### Update job application by Id 
-PUT {{host}}/api/jobApplications/1
+PUT {{host}}/api/applications/23
 Authorization: Bearer {{token}}
 Content-Type: application/json
 {
   "description": "some description",
   "link": "http://test@example.com",
-  "applieddate":"2026-09-28"
+  "applieddate":"2026-09-20"
 }
 
 ### Update job application status
-PUT {{host}}/api/jobApplications/1/status?status=Archived
+PUT {{host}}/api/applications/1/status?status=Archived
 Authorization: Bearer {{token}}
