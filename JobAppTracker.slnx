@@ -3,4 +3,8 @@
   <Folder Name="/src/api/">
     <Project Path="src/api/JobAppTrackerApi.csproj" />
   </Folder>
+  <Folder Name="/tests/" />
+  <Folder Name="/tests/api/">
+    <Project Path="tests/api/JobAppTracker.Tests.csproj" />
+  </Folder>
 </Solution>
