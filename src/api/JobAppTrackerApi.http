@@ -1,17 +1,61 @@
 @host = http://localhost:5208
+@token = <paste-token-here>
 
 ### Register
 POST {{host}}/api/auth/register
 Content-Type: application/json
-
-{ "email": "test@example.com", "password": "Password123" }
+{ 
+  "email": "test@example.com", 
+  "password": "Password123" 
+}
 
 ### Login
 POST {{host}}/api/auth/login
 Content-Type: application/json
+{ 
+  "email": "test@example.com", 
+  "password": "Password123" 
+}
 
-{ "email": "test@example.com", "password": "Password123" }
-
-### Test authorization for user (paste your token after Bearer)
+### Test authorization for user 
 GET {{host}}/api/test
-Authorization: Bearer <paste-token-here>
+Authorization: Bearer {{token}}
+
+### Create job application
+POST {{host}}/api/jobApplications/
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{
+  "title": "some job",
+  "company": "some company"
+}
+
+### Get job application by Id
+Get {{host}}/api/jobApplications/1
+Authorization: Bearer {{token}}
+
+### Get all job application 
+Get {{host}}/api/jobApplications
+Authorization: Bearer {{token}}
+
+### Delete job application by Id
+Delete {{host}}/api/jobApplications/1
+Authorization: Bearer {{token}}
+
+### Delete all job application 
+Delete {{host}}/api/jobApplications
+Authorization: Bearer {{token}}
+ 
+### Update job application by Id 
+PUT {{host}}/api/jobApplications/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+{
+  "description": "some description",
+  "link": "http://test@example.com",
+  "applieddate":"2026-09-28"
+}
+
+### Update job application status
+PUT {{host}}/api/jobApplications/1/status?status=Archived
+Authorization: Bearer {{token}}
