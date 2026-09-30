@@ -58,13 +58,12 @@ public class CrudTests : IClassFixture<ApiTestFixture>
     };
 
     private async Task<JobAppResponse> CreateApplicationAsync(string token, string title, string company, 
-        DateOnly? appliedDate = null, string link = "")
+        DateOnly? appliedDate = null)
     {
         var request = new CreateRequest
         {
             Title = title,
             Company = company,
-            Link = link,
             AppliedDate = appliedDate ?? DateOnly.FromDateTime(DateTime.UtcNow)
         };
 

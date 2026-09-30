@@ -8,8 +8,6 @@ using Microsoft.IdentityModel.Tokens;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("Default");
-var jwtKey = builder.Configuration["Jwt:Key"]
-    ?? throw new InvalidOperationException("Jwt:Key is not configured.");
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -19,6 +17,9 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        var jwtKey = builder.Configuration["Jwt:Key"]
+            ?? throw new InvalidOperationException("Jwt:Key is not configured.");
+
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
