@@ -27,11 +27,14 @@ namespace JobAppTracker.Tests
             {
                 config.AddInMemoryCollection(new Dictionary<string, string?>
                 {
-                    ["ConnectionStrings:Default"] = _db.GetConnectionString()
+                    ["ConnectionStrings:Default"] = _db.GetConnectionString(),
+                    ["Jwt:Key"] = "test-signing-key-only-used-in-automated-tests-1234567890",
+                    ["Jwt:Issuer"] = "JobAppTracker",
+                    ["Jwt:Audience"] = "JobAppTracker",
+                    ["Jwt:ExpiryMinutes"] = "60"
                 });
             });
         }
-
         public new async Task DisposeAsync() => await _db.DisposeAsync();
     }
 }
