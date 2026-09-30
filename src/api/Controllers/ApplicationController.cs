@@ -11,14 +11,14 @@ namespace JobAppTrackerApi.Controllers
     [ApiController]
     [Route("api/applications")]
     [Authorize]
-    public class JobApplicationController(AppDbContext db) : ControllerBase
+    public class ApplicationController(AppDbContext db) : ControllerBase
     {
         private int _userId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         [HttpPost]
         public async Task<IActionResult> Create(CreateRequest request)
         {
-            var item = new JobApplication
+            var item = new Application
             {
                 UserId = _userId,
                 Title = request.Title,
@@ -178,7 +178,7 @@ namespace JobAppTrackerApi.Controllers
 
             var entry = db.Entry(jobApp);
             bool hasChanges = entry.Properties
-                                .Where(p => p.Metadata.Name != nameof(JobApplication.UpdatedDate))
+                                .Where(p => p.Metadata.Name != nameof(Application.UpdatedDate))
                                 .Any(p => p.IsModified);
 
             if (hasChanges)
@@ -219,7 +219,7 @@ namespace JobAppTrackerApi.Controllers
             return NoContent();
         }
 
-        private static JobAppResponse ToResponse(JobApplication jobApp)
+        private static JobAppResponse ToResponse(Application jobApp)
         {
             return new JobAppResponse(
                 jobApp.Id,

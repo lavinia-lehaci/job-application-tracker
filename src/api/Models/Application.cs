@@ -8,11 +8,11 @@
         Archived
     }
 
-    public class JobApplication
+    public class Application
     {
         public int Id { get; set; }
         public int UserId { get; set; }
-        public User User { get; set; } = null;
+        public User User { get; set; } = null!;
 
         public string Title { get; set; } = string.Empty;
         public string Company { get; set; } = string.Empty;
