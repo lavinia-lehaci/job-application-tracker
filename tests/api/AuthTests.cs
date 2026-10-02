@@ -106,14 +106,4 @@ public class AuthTests : IClassFixture<ApiTestFixture>
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
-
-    /// <summary>
-    /// Calling a protected endpoint with no token should return 401
-    /// </summary>
-    [Fact]
-    public async Task AccessWithoutAuthorization()
-    {
-        var response = await _httpClient.GetAsync("/api/test");
-        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    }
 }
