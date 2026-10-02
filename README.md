@@ -57,7 +57,7 @@ Tests run automatically on every push via GitHub Actions.
 - **Per-user data isolation**: every query filters by the user ID extracted from the token's claims. A request for another user's resource returns 404.
 - **Controllers use `DbContext` directly**, with no generic repository layer, since `DbContext` already functions as a repository and unit of work for a project this size.
 - **PATCH-style partial updates on `PUT`**: only fields present in the request body are changed; omitted fields are left untouched.
-- **`UpdatedAt` only changes on a real modification**, using EF Core's change tracker to detect updates.
+- **`UpdatedDate` only changes on a real modification**, using EF Core's change tracker to detect updates.
 
 ## Next steps
 
