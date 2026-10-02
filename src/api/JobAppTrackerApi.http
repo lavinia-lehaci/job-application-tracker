@@ -17,10 +17,6 @@ Content-Type: application/json
   "password": "Password123" 
 }
 
-### Test authorization for user 
-GET {{host}}/api/test
-Authorization: Bearer {{token}}
-
 ### Create job application
 POST {{host}}/api/applications/
 Authorization: Bearer {{token}}
